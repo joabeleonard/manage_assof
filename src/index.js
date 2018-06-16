@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import AutorBox from './Autor';
+import NoticiaBox from './Noticia';
 import Home from './Home';
 import Livro from './Livro';
 import './index.css';
@@ -13,6 +14,9 @@ ReactDOM.render(
   		<IndexRoute component={Home}/>
 	  	<Route path="/autor" component={AutorBox}/>
 	  	<Route path="/livro" component={Livro}/>
+		<Route path="/noticias" component={NoticiaBox}/>
+		<Route path="/acompanhamentoJuridico" component={Livro}/>
+
   	</Route>
   </Router>),
   document.getElementById('root')

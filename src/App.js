@@ -20,8 +20,8 @@ class App extends Component {
 
                   <ul className="pure-menu-list">
                       <li className="pure-menu-item"><Link to="/" className="pure-menu-link">Home</Link></li>
-                      <li className="pure-menu-item"><Link to="/autor" className="pure-menu-link">Autor</Link></li>
-                      <li className="pure-menu-item"><Link to="/livro" className="pure-menu-link">Livro</Link></li>
+                      <li className="pure-menu-item"><Link to="/noticias" className="pure-menu-link">Noticias</Link></li>
+                      <li className="pure-menu-item"><Link to="/acompanhamentoJuridico" className="pure-menu-link">Acompanhamento Juridico</Link></li>
 
                       
                   </ul>
