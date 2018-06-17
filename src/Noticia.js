@@ -23,9 +23,8 @@ class FormularioNoticia extends Component {
       data: JSON.stringify({titulo:this.state.titulo,noticia:this.state.noticia,
         data:new Date(),image:this.state.image}),
       success: function(novaListagem){
-        PubSub.publish('atualiza-lista-noticias',novaListagem);
-        this.setState({lista:novaListagemz});
-        
+        console.log(novaListagem);
+        PubSub.publish('atualiza-lista-noticias',novaListagem);      
         this.setState({id_noticia:'',titulo:'',noticia:'', data:'', image:''});
       }.bind(this),
       error: function(resposta){

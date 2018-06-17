@@ -40,7 +40,7 @@ class FormularioAcompanhamentoJuridico extends Component {
       type: 'POST',
       data: JSON.stringify({titulo: '', data: '',detalhes:'',numeroProcesso:'', id_usuario: ''}),
       success: function(novaListagem) {
-          PubSub.publish( 'atualiza-lista-livros',novaListagem);            
+          PubSub.publish( 'atualiza-lista-acompanhamentos',novaListagem);            
           this.setState({titulo:'',preco:'',autorId:''});
       },
       error: function(resposta){
@@ -57,16 +57,18 @@ class FormularioAcompanhamentoJuridico extends Component {
   }
   
   render() {
-    var autores = this.props.autores.map(function(autor){
-      return <option key={autor.id} value={autor.id}>{autor.nome}</option>;
+    var usuarios = this.props.usuarios.map(function(usuario){
+      return <option key={usuario.id_usuario} value={usuario.id_usuario}>{usuario.nome}</option>;
     });
     return (
       <div className="autorForm">
         <form className="pure-form pure-form-aligned" onSubmit={this.handleLivroSubmit}>
-          <InputCustomizado id="titulo" name="titulo" label="Titulo: " type="text" value={this.state.titulo} placeholder="Titulo do livro" onChange={this.setTitulo} />
-          <InputCustomizado id="preco" name="preco" label="Preco: " type="decimal" value={this.state.preco} placeholder="Preço do livro" onChange={this.setPreco} />
+          <InputCustomizado id="titulo" name="titulo" label="Titulo: " type="text" value={this.state.titulo} placeholder="Titulo" onChange={this.setTitulo} />
+          <InputCustomizado id="detalhes" name="detalhes" label="Detalhes: " type="text" value={this.state.detalhes} placeholder="Detalhes" onChange={this.setPreco} />
+          <InputCustomizado id="numeroProcesso" name="numeroProcesso" label="Número do Processo: " type="text" value={this.state.numeroProcesso} placeholder="Número do Processo" onChange={this.setPreco} />
+
           <div className="pure-controls">
-            <select value={this.state.autorId} name="autorId" onChange={this.setAutorId}>
+            <select value={this.state.id_usuario} name="id_usuario" onChange={this.id_usuario}>
               <option value="">Selecione</option>
               {usuarios}
             </select>
@@ -81,7 +83,7 @@ class FormularioAcompanhamentoJuridico extends Component {
   }
 } 
 
-class TabelaLivros extends Component {
+class TabelaAcompanhamentoJuridico extends Component {
   
   render() {
     var livros = this.props.lista.map(function(livro){
@@ -110,7 +112,7 @@ class TabelaLivros extends Component {
   }
 }
 
-export default class LivroAdmin extends Component {
+export default class AcompanhamentoJuridicoAdmin extends Component {
   constructor(props) {
     super(props);
     this.state = {lista : [],autores:[]};
