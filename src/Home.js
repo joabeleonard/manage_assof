@@ -11,7 +11,7 @@ export default class Home extends Component {
 
   componentDidMount(){  
     $.ajax({
-        url:"http://localhost:1234/arquivos",
+        url:"http://assofce.kinghost.net:21314/arquivos",
         dataType: 'json',
         success:function(resposta){    
           this.setState({lista:resposta});
@@ -51,7 +51,7 @@ class TabelaImagens extends Component{
                             this.props.lista.map(function(imagem){
                               return (
                                 <tr key={imagem}>
-                                  <td><img width='500px' src={'http://localhost:1234/'+imagem} /></td>
+                                  <td><img width='500px' src={'http://assofce.kinghost.net:21314/'+imagem} /></td>
                                 </tr>
                               );
                             })

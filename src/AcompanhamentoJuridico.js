@@ -8,30 +8,18 @@ class FormularioAcompanhamentoJuridico extends Component {
   constructor(props) {
     super(props);
     this.state = {titulo: '', data: '',detalhes:'',numeroProcesso:'', id_usuario: ''};
-    this.setTitulo = this.setTitulo.bind(this);
-    this.setPreco = this.setPreco.bind(this);
-    this.setAutorId = this.setAutorId.bind(this);   
     this.handlAcompanhamentoJuridicoSubmit = this.handleAcompanhamentoJuridicoSubmit.bind(this);
   }
   
-  setTitulo(e) {
-    this.setState({titulo: e.target.value});
-  }
-
-  setPreco(e) {
-    this.setState({preco: e.target.value});
-  }
-
-  setAutorId(e) {
-    this.setState({autorId: e.target.value});
-  }
   
+  salvaAlteracao(nomeInput,evento){
+    var campoSendoAlterado = {};
+    campoSendoAlterado[nomeInput] = evento.target.value;    
+    this.setState(campoSendoAlterado);   
+  }
   
   handleAcompanhamentoJuridicoSubmit(e) {
     e.preventDefault();
-    var titulo = this.state.titulo.trim();
-    var preco = this.state.preco.trim();
-    var autorId = this.state.autorId;
 
     $.ajax({
       url: 'http://assofce.kinghost.net:21314/acompanhamentoJuridico/cadastrar',
@@ -63,9 +51,9 @@ class FormularioAcompanhamentoJuridico extends Component {
     return (
       <div className="autorForm">
         <form className="pure-form pure-form-aligned" onSubmit={this.handleLivroSubmit}>
-          <InputCustomizado id="titulo" name="titulo" label="Titulo: " type="text" value={this.state.titulo} placeholder="Titulo" onChange={this.setTitulo} />
-          <InputCustomizado id="detalhes" name="detalhes" label="Detalhes: " type="text" value={this.state.detalhes} placeholder="Detalhes" onChange={this.setPreco} />
-          <InputCustomizado id="numeroProcesso" name="numeroProcesso" label="Número do Processo: " type="text" value={this.state.numeroProcesso} placeholder="Número do Processo" onChange={this.setPreco} />
+          <InputCustomizado id="titulo" name="titulo" label="Titulo: " type="text" value={this.state.titulo} placeholder="Titulo" onChange={this.salvaAlteracao.bind(this,'titulo')} />
+          <InputCustomizado id="detalhes" name="detalhes" label="Detalhes: " type="text" value={this.state.detalhes} placeholder="Detalhes" onChange={this.salvaAlteracao.bind(this,'detalhes')}  />
+          <InputCustomizado id="numeroProcesso" name="numeroProcesso" label="Número do Processo: " type="text" value={this.state.numeroProcesso} placeholder="Número do Processo" onChange={this.salvaAlteracao.bind(this,'numeroProcesso')}  />
 
           <div className="pure-controls">
             <select value={this.state.id_usuario} name="id_usuario" onChange={this.id_usuario}>
@@ -86,12 +74,12 @@ class FormularioAcompanhamentoJuridico extends Component {
 class TabelaAcompanhamentoJuridico extends Component {
   
   render() {
-    var livros = this.props.lista.map(function(livro){
+    var acompanhamentos = this.props.lista.map(function(acompanhamento){
       return(
-          <tr key={livro.titulo}>
-            <td>{livro.titulo}</td>
-            <td>{livro.autor.nome}</td>
-            <td>{livro.preco}</td>
+          <tr key={acompanhamento.id_acompanhamento_juridico}>
+            <td>{acompanhamento.titulo}</td>
+            <td>{acompanhamento.detalhes}</td>
+            <td>{acompanhamento.numeroProcesso}</td>
           </tr>
         );
       });
@@ -100,12 +88,12 @@ class TabelaAcompanhamentoJuridico extends Component {
         <thead>
           <tr>
             <th>Titulo</th>
-            <th>Autor</th>
-            <th>Preco</th>
+            <th>Detalhe</th>
+            <th>Numero do processo</th>
           </tr>
         </thead>
         <tbody>
-          {livros}
+          {acompanhamentos}
         </tbody>
       </table>
     );
@@ -115,12 +103,12 @@ class TabelaAcompanhamentoJuridico extends Component {
 export default class AcompanhamentoJuridicoAdmin extends Component {
   constructor(props) {
     super(props);
-    this.state = {lista : [],autores:[]};
+    this.state = {lista : [],usuarios:[]};
   }
 
   componentDidMount() {
     $.ajax({
-      url: "http://localhost:8080/api/livros",
+      url: "http://assofce.kinghost.net:21314/acompanhamentoJuridico",
       dataType: 'json',
       success: function(data) {
         this.setState({lista: data});
@@ -128,10 +116,10 @@ export default class AcompanhamentoJuridicoAdmin extends Component {
     });
     
     $.ajax({
-      url: "http://localhost:8080/api/autores",
+      url: "http://assofce.kinghost.net:21314/usuarios",
       dataType: 'json',
       success: function(data) {
-        this.setState({autores: data});
+        this.setState({usuarios: data});
       }.bind(this)
     });
 
