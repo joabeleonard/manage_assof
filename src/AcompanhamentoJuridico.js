@@ -7,10 +7,16 @@ import TratadorErros from './TratadorErros'
 class FormularioAcompanhamentoJuridico extends Component {
   constructor(props) {
     super(props);
+    this.setIdUsuario = this.setIdUsuario.bind(this);   
+
     this.state = {titulo: '', data: '',detalhes:'',numeroProcesso:'', id_usuario: ''};
-    this.handlAcompanhamentoJuridicoSubmit = this.handleAcompanhamentoJuridicoSubmit.bind(this);
+    this.handleAcompanhamentoJuridicoSubmit = this.handleAcompanhamentoJuridicoSubmit.bind(this);
+
   }
   
+  setIdUsuario(e) {
+    this.setState({id_usuario: e.target.value});
+  }
   
   salvaAlteracao(nomeInput,evento){
     var campoSendoAlterado = {};
@@ -20,16 +26,17 @@ class FormularioAcompanhamentoJuridico extends Component {
   
   handleAcompanhamentoJuridicoSubmit(e) {
     e.preventDefault();
+    console.log(this.state.titulo);
 
     $.ajax({
-      url: 'http://assofce.kinghost.net:21314/acompanhamentoJuridico/cadastrar',
+      url: 'http://localhost:1234/acompanhamentoJuridico/cadastrar',
       contentType: 'application/json',
       dataType: 'json',
       type: 'POST',
-      data: JSON.stringify({titulo: '', data: '',detalhes:'',numeroProcesso:'', id_usuario: ''}),
+      data: JSON.stringify({titulo: this.state.titulo, data: this.state.data,detalhes:this.state.detalhes,numeroProcesso:this.state.numeroProcesso, id_usuario: this.state.id_usuario}),
       success: function(novaListagem) {
           PubSub.publish( 'atualiza-lista-acompanhamentos',novaListagem);            
-          this.setState({titulo:'',preco:'',autorId:''});
+          this.setState({titulo: '', data: '',detalhes:'',numeroProcesso:'', id_usuario: ''});
       },
       error: function(resposta){
         if(resposta.status === 400){
@@ -41,7 +48,6 @@ class FormularioAcompanhamentoJuridico extends Component {
       }            
     });  
     
-    this.setState({titulo: '', preco: '', autorId: ''});
   }
   
   render() {
@@ -50,13 +56,13 @@ class FormularioAcompanhamentoJuridico extends Component {
     });
     return (
       <div className="autorForm">
-        <form className="pure-form pure-form-aligned" onSubmit={this.handleLivroSubmit}>
+        <form className="pure-form pure-form-aligned" onSubmit={this.handleAcompanhamentoJuridicoSubmit}>
           <InputCustomizado id="titulo" name="titulo" label="Titulo: " type="text" value={this.state.titulo} placeholder="Titulo" onChange={this.salvaAlteracao.bind(this,'titulo')} />
           <InputCustomizado id="detalhes" name="detalhes" label="Detalhes: " type="text" value={this.state.detalhes} placeholder="Detalhes" onChange={this.salvaAlteracao.bind(this,'detalhes')}  />
           <InputCustomizado id="numeroProcesso" name="numeroProcesso" label="Número do Processo: " type="text" value={this.state.numeroProcesso} placeholder="Número do Processo" onChange={this.salvaAlteracao.bind(this,'numeroProcesso')}  />
 
           <div className="pure-controls">
-            <select value={this.state.id_usuario} name="id_usuario" onChange={this.id_usuario}>
+            <select value={this.state.id_usuario} name="id_usuario" onChange={this.setIdUsuario}>
               <option value="">Selecione</option>
               {usuarios}
             </select>
