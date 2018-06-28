@@ -25,19 +25,30 @@ class FormularioAcompanhamentoJuridico extends Component {
   }
   
   handleAcompanhamentoJuridicoSubmit(e) {
-    e.preventDefault();
+    e.preventDefault();    
+
     console.log(this.state.titulo);
 
+    let acompanhamentoJuridico ={titulo: this.state.titulo, data: new Date(),
+      detalhes:this.state.detalhes,numeroProcesso:this.state.numeroProcesso, 
+      id_usuario: this.state.id_usuario};
     $.ajax({
       url: 'http://localhost:1234/acompanhamentoJuridico/cadastrar',
       contentType: 'application/json',
       dataType: 'json',
       type: 'POST',
-      data: JSON.stringify({titulo: this.state.titulo, data: this.state.data,detalhes:this.state.detalhes,numeroProcesso:this.state.numeroProcesso, id_usuario: this.state.id_usuario}),
-      success: function(novaListagem) {
-          PubSub.publish( 'atualiza-lista-acompanhamentos',novaListagem);            
-          this.setState({titulo: '', data: '',detalhes:'',numeroProcesso:'', id_usuario: ''});
-      },
+      data: JSON.stringify(acompanhamentoJuridico),
+      success: function(resposta) {
+          $.ajax({
+            url: "http://assofce.kinghost.net:21314/acompanhamentoJuridico",
+            dataType: 'json',
+            success: function(data) {
+              PubSub.publish('atualiza-lista-acompanhamentos',data);        
+            }.bind(this)
+          });
+          this.state  ={titulo: '', data: '',detalhes:'',numeroProcesso:'', id_usuario: ''};
+
+      }.bind(this),
       error: function(resposta){
         if(resposta.status === 400){
           new TratadorErros().publicaErros(resposta.responseJSON);
@@ -56,7 +67,7 @@ class FormularioAcompanhamentoJuridico extends Component {
     });
     return (
       <div className="autorForm">
-        <form className="pure-form pure-form-aligned" onSubmit={this.handleAcompanhamentoJuridicoSubmit}>
+        <form className="pure-form pure-form-aligned" onSubmit={this.handleAcompanhamentoJuridicoSubmit} method="post">
           <InputCustomizado id="titulo" name="titulo" label="Titulo: " type="text" value={this.state.titulo} placeholder="Titulo" onChange={this.salvaAlteracao.bind(this,'titulo')} />
           <InputCustomizado id="detalhes" name="detalhes" label="Detalhes: " type="text" value={this.state.detalhes} placeholder="Detalhes" onChange={this.salvaAlteracao.bind(this,'detalhes')}  />
           <InputCustomizado id="numeroProcesso" name="numeroProcesso" label="Número do Processo: " type="text" value={this.state.numeroProcesso} placeholder="Número do Processo" onChange={this.salvaAlteracao.bind(this,'numeroProcesso')}  />
