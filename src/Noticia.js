@@ -3,17 +3,17 @@ import $ from 'jquery';
 import InputCustomizado from './componentes/InputCustomizado';
 import PubSub from 'pubsub-js';
 import TratadorErros from  './TratadorErros';
+import axios from 'axios';
 
 class FormularioNoticia extends Component {
 
   constructor() {
     super();    
-    this.state = {titulo:'',noticia:'', data:'', image:''};
+    this.state = {titulo:'',noticia:'', data:'', image:'', file:null};
     this.enviaForm = this.enviaForm.bind(this);
   }
 
   enviaForm(evento){
-    console.log(this.state.titulo);
     evento.preventDefault();    
     $.ajax({
       url:'http://assofce.kinghost.net:21314/noticias/cadastar',
@@ -21,12 +21,23 @@ class FormularioNoticia extends Component {
       dataType:'json',
       type:'post',
       data: JSON.stringify({titulo:this.state.titulo,noticia:this.state.noticia,
-        data:new Date(),image:this.state.image}),
+            data:new Date(),image:this.state.image}),
       success: function(novaListagem){
-        console.log(novaListagem);
-        PubSub.publish('atualiza-lista-noticias',novaListagem);      
-        this.setState({id_noticia:'',titulo:'',noticia:'', data:'', image:''});
-      }.bind(this),
+
+          const fd = new FormData();
+          fd.append('image', this.state.file, this.state.file.name);
+          axios.post('http://assofce.kinghost.net:21314/uploadImage', fd).
+              then(res => {
+                $.ajax({
+                  url:"http://assofce.kinghost.net:21314/noticias",
+                  dataType: 'json',
+                  success:function(resposta){ 
+                    PubSub.publish('atualiza-lista-noticias',resposta);      
+                    this.setState({id_noticia:'',titulo:'',noticia:'', data:'', image:''});   
+                  }.bind(this)
+                }); 
+              });
+        }.bind(this),
       error: function(resposta){
         if(resposta.status === 400) {
           new TratadorErros().publicaErros(resposta.responseJSON);
@@ -44,13 +55,18 @@ class FormularioNoticia extends Component {
     this.setState(campoSendoAlterado);   
   }
 
+  fileSelectedHandler = event =>{
+    this.setState({file:event.target.files[0], image:event.target.files[0].name}); 
+    console.log(event.target.name)
+  }
+
 	render() {
 		return (
             <div className="pure-form pure-form-aligned">
               <form className="pure-form pure-form-aligned" onSubmit={this.enviaForm} method="post">
                 <InputCustomizado id="titulo" type="text" name="titulo" value={this.state.titulo} onChange={this.salvaAlteracao.bind(this,'titulo')} label="Titulo"/>                                              
                 <InputCustomizado id="noticia" type="text" name="noticia" value={this.state.noticia} onChange={this.salvaAlteracao.bind(this,'noticia')} label="Noticia"/>                                              
-                <InputCustomizado id="file" type="file" name="file" value={this.state.image} onChange={this.salvaAlteracao.bind(this,'image')} label="Imagem"/>                                                                      
+                <InputCustomizado id="file" type="file" name="file" value={this.state.image} onChange={this.fileSelectedHandler} label="Imagem"/>                                                                      
                 <div className="pure-control-group">                                  
                   <label></label> 
                   <button type="submit" className="pure-button pure-button-primary">Gravar</button>                                    

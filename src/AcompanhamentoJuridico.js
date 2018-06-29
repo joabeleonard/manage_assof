@@ -33,7 +33,7 @@ class FormularioAcompanhamentoJuridico extends Component {
       detalhes:this.state.detalhes,numeroProcesso:this.state.numeroProcesso, 
       id_usuario: this.state.id_usuario};
     $.ajax({
-      url: 'http://localhost:1234/acompanhamentoJuridico/cadastrar',
+      url: 'http://assofce.kinghost.net:21314/acompanhamentoJuridico/cadastrar',
       contentType: 'application/json',
       dataType: 'json',
       type: 'POST',
