@@ -6,6 +6,7 @@ import NoticiaBox from './Noticia';
 import Home from './Home';
 import Livro from './Livro';
 import AcompanhamentoJuridicoAdmin from './AcompanhamentoJuridico';
+import AssociadosAdmin from './Usuarios';
 
 import './index.css';
 import {Router,Route,browserHistory,IndexRoute} from 'react-router';
@@ -18,6 +19,7 @@ ReactDOM.render(
 	  	<Route path="/livro" component={Livro}/>
 		<Route path="/noticias" component={NoticiaBox}/>
 		<Route path="/acompanhamentoJuridico" component={AcompanhamentoJuridicoAdmin}/>
+		<Route path="/associados" component={AssociadosAdmin}/>
 
   	</Route>
   </Router>),

@@ -21,12 +21,12 @@ class FormularioNoticia extends Component {
       dataType:'json',
       type:'post',
       data: JSON.stringify({titulo:this.state.titulo,noticia:this.state.noticia,
-            data:new Date(),image:this.state.image}),
+            data:new Date(),image:this.state.image2}),
       success: function(novaListagem){
 
           const fd = new FormData();
           fd.append('image', this.state.file, this.state.file.name);
-          axios.post('http://assofce.kinghost.net:21314/uploadImage', fd).
+          axios.post('http://assofce.kinghost.net:21314/usuarios/uploadImage', fd).
               then(res => {
                 $.ajax({
                   url:"http://assofce.kinghost.net:21314/noticias",
@@ -56,8 +56,8 @@ class FormularioNoticia extends Component {
   }
 
   fileSelectedHandler = event =>{
-    this.setState({file:event.target.files[0], image:event.target.files[0].name}); 
-    console.log(event.target.name)
+    this.setState({file:event.target.files[0],image:event.target.value, image2:event.target.files[0].name}); 
+    console.log(event.target.files[0])
   }
 
 	render() {
