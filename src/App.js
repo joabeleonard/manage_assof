@@ -16,12 +16,12 @@ class App extends Component {
 
           <div id="menu">
               <div className="pure-menu">
-                  <a className="pure-menu-heading" href="#">Company</a>
+                  <a className="pure-menu-heading" href="#">ASSOF</a>
 
                   <ul className="pure-menu-list">
                       <li className="pure-menu-item"><Link to="/" className="pure-menu-link">Home</Link></li>
                       <li className="pure-menu-item"><Link to="/noticias" className="pure-menu-link">Noticias</Link></li>
-                      <li className="pure-menu-item"><Link to="/acompanhamentoJuridico" className="pure-menu-link">Acompanhamento Juridico</Link></li>
+                      <li className="pure-menu-item"><Link to="/acompanhamentoJuridico" className="pure-menu-link">Acompanhamento <br/>Juridico</Link></li>
                       <li className="pure-menu-item"><Link to="/associados" className="pure-menu-link">Associados</Link></li>
 
                       
